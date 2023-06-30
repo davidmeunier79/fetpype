@@ -154,8 +154,7 @@ def create_main_workflow(data_dir, process_dir, subjects, sessions,
             "datatype": "anat", "suffix": "T2w", "acquisition":"tru",
             "extension": ["nii", ".nii.gz"]}
 
-
-        #### datasource
+        # ### datasource
         datasource = create_datasource(
             output_query, data_dir, subjects,  sessions, acquisitions, reconstructions)
 
