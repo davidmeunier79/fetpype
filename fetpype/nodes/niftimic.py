@@ -59,7 +59,8 @@ def niftimic_recon(stacks, masks,  pre_command="", niftimic_image=""):
 
     reconst_dir = os.path.abspath("srr_reconstruction")
 
-    cmd = pre_command + " " + niftimic_image + " "
+    cmd_os = pre_command + " "
+    cmd_os += niftimic_image + " "
     cmd_os += "niftymic_run_reconstruction_pipeline"
     # input stacks
     cmd_os += " --filenames "
