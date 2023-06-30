@@ -60,6 +60,19 @@ def create_fet_subpipes(name="full_fet_pipe", params={}):
     full_fet_pipe.connect(inputnode, 'haste_stacks',
                           niftymic_segment_haste, "raw_T2s")
 
+    if "general" in params.keys():
+        if "pre_command" in params["general"]:
+            niftymic_segment_haste.inputs.pre_command = \
+                params["general"]["pre_command"]
+
+        if "niftimic_image" in params["general"]:
+            niftymic_segment_haste.inputs.niftimic_image = \
+                params["general"]["niftimic_image"]
+
+    else:
+        niftymic_segment_haste.inputs.pre_command = ""
+        niftymic_segment_haste.inputs.niftimic_image = ""
+
     # denoising_haste
     denoising_haste = pe.MapNode(
         interface=DenoiseImage(), iterfield=["input_image"],
