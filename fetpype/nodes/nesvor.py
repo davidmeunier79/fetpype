@@ -691,7 +691,7 @@ class NesvorFullReconstruction(CommandLine):
         self._cmd = (
             f"{self.inputs.pre_command} "
             f"{self.inputs.nesvor_image} "
-            "nesvor reconstruct"
+            "nesvor reconstruct --single-precision "
         )
 
     # Customize how arguments are formatted
