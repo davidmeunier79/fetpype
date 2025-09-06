@@ -121,24 +121,25 @@ def create_datasource(
                 print(
                     f"WARNING: Session {ses} was not found for subject {sub}."
                 )
-            existing_acq = layout.get_acquisition(subject=sub, session=ses)
-            if acquisitions is None:
-                acquisitions_subj = existing_acq
-            else:
-                acquisitions_subj = acquisitions
-            # If there is no acquisition found, maybe the acquisition
-            # tag was not specified.
-            acquisitions_subj = (
-                [None] if len(acquisitions_subj) == 0 else acquisitions_subj
-            )
-            for acq in acquisitions_subj:
-                if acq is not None and acq not in existing_acq:
-                    print(
-                        f"WARNING: Acquisition {acq} was not found for "
-                        f"subject {sub} session {ses}."
-                    )
-
-                iterables[1] += [(sub, ses, acq)]
+            # existing_acq = layout.get_acquisition(subject=sub, session=ses)
+            # if acquisitions is None:
+            #     acquisitions_subj = existing_acq
+            # else:
+            #     acquisitions_subj = acquisitions
+            # # If there is no acquisition found, maybe the acquisition
+            # # tag was not specified.
+            # acquisitions_subj = (
+            #     [None] if len(acquisitions_subj) == 0 else acquisitions_subj
+            # )
+            # for acq in acquisitions_subj:
+            #     if acq is not None and acq not in existing_acq:
+            #         print(
+            #             f"WARNING: Acquisition {acq} was not found for "
+            #             f"subject {sub} session {ses}."
+            #         )
+            #
+            #     iterables[1] += [(sub, ses, acq)]
+            iterables[1] += [(sub, ses)]
 
     bids_datasource.iterables = iterables
 
