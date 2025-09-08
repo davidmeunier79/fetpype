@@ -8,7 +8,7 @@ from nipype.interfaces.base import (
     BaseInterface,
     BaseInterfaceInputSpec,
 )
-from fetpype.nodes.utils import get_run_id
+from fetpype.nodes.utils import get_run_id, get_acq_id
 import logging
 
 log = logging.getLogger("nipype.workflow")
@@ -494,27 +494,79 @@ class CheckAndSortStacksAndMasks(BaseInterface):
     output_spec = CheckAndSortStacksAndMasksOutputSpec
     _results = {}
 
+
+    #
+    # def _run_interface(self, runtime):
+    #
+    #     # Check that stacks and masks run_ids match
+    #     stacks_run = get_run_id(self.inputs.stacks)
+    #     masks_run = get_run_id(self.inputs.masks)
+    #
+    #     out_stacks = []
+    #     out_masks = []
+    #     for i, s in enumerate(stacks_run):
+    #         in_stack = self.inputs.stacks[i]
+    #
+    #         if s in masks_run:
+    #             out_stack = os.path.join(
+    #                 self._gen_filename("output_dir_stacks"),
+    #                 os.path.basename(in_stack),
+    #             )
+    #             in_mask = self.inputs.masks[masks_run.index(s)]
+    #             in_mask = self.inputs.masks[masks_run.index(s)]
+    #             out_mask = os.path.join(
+    #                 self._gen_filename("output_dir_masks"),
+    #                 os.path.basename(in_mask),
+    #             )
+    #             out_stacks.append(out_stack)
+    #             out_masks.append(out_mask)
+    #         else:
+    #             raise RuntimeError(
+    #                 f"Stack {os.path.basename(self.inputs.stacks[i])} has "
+    #                 f"no corresponding mask (existing IDs: {masks_run})."
+    #             )
+    #
+    #         os.system(f"cp {in_stack} " f"{out_stack}")
+    #         os.system(f"cp {in_mask} " f"{out_mask}")
+    #     self._results["output_stacks"] = out_stacks
+    #     self._results["output_masks"] = out_masks
+    #     return runtime
+
+
     def _run_interface(self, runtime):
 
         # Check that stacks and masks run_ids match
         stacks_run = get_run_id(self.inputs.stacks)
         masks_run = get_run_id(self.inputs.masks)
 
+
+        stacks_acq = get_acq_id(self.inputs.stacks)
+        masks_acq = get_acq_id(self.inputs.masks)
+
+        run_acq_stacks = zip(stacks_run, stacks_acq)
+
         out_stacks = []
         out_masks = []
-        for i, s in enumerate(stacks_run):
-            in_stack = self.inputs.stacks[i]
 
-            if s in masks_run:
+        for i, (r, a)  in enumerate(run_acq_stacks):
+
+
+            if r in masks_run and a in masks_acq:
+
+                in_stack = self.inputs.stacks[i]
+
                 out_stack = os.path.join(
                     self._gen_filename("output_dir_stacks"),
                     os.path.basename(in_stack),
                 )
-                in_mask = self.inputs.masks[masks_run.index(s)]
+
+                in_mask = self.inputs.masks[i]
+
                 out_mask = os.path.join(
                     self._gen_filename("output_dir_masks"),
                     os.path.basename(in_mask),
                 )
+
                 out_stacks.append(out_stack)
                 out_masks.append(out_mask)
             else:
@@ -602,6 +654,7 @@ def run_prepro_cmd(
 
         in_masks = ""
         in_masks_dir = None
+
         if input_masks is not None:
             in_masks_dir = get_directory(input_masks)
             in_masks = " ".join(input_masks)

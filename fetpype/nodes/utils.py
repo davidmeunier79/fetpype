@@ -46,9 +46,24 @@ def is_valid_cmd(cmd, valid_tags):
         raise ValueError("Docker command must have a <mount> tag")
 
 
-def get_run_id(file_list):
+def get_acq_id(file_list):
     """
     Get the run ID from the file name.
+    """
+    acqs = []
+    for file in file_list:
+        try:
+            acqs.append(re.search(r"acq-([^\W_]+)_", file).group(1))
+        except Exception as e:
+            raise ValueError(
+                f"acq ID not found in file name: {file}. Error: {e}"
+            )
+    return acqs
+
+
+def get_run_id(file_list):
+    """
+    Get the acq ID from the file name.
     """
     runs = []
     for file in file_list:
