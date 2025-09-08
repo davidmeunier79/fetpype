@@ -251,16 +251,19 @@ def create_main_workflow(
             simple_form=True,
         )
 
+    if ngpuprocs is not None:
+        plugin_args={"n_procs": nprocs,
+                    "n_gpu_procs": ngpuprocs,
+                    "status_callback": status_line}
+    else:
+
+        plugin_args={"n_procs": nprocs,
+                    "status_callback": status_line}
+
     main_workflow.run(
         plugin="MultiProc",
-        if ngpuprocs is not None:
-            plugin_args={"n_procs": nprocs,
-                         "n_gpu_procs": ngpuprocs,
-                         "status_callback": status_line},
-        else:
+        plugin_args=plugin_args
 
-            plugin_args={"n_procs": nprocs,
-                         "status_callback": status_line},
     )
 
 
