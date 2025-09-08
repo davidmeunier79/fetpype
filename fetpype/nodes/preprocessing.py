@@ -504,81 +504,112 @@ class CheckAndSortStacksAndMasks(BaseInterface):
     #
     #     out_stacks = []
     #     out_masks = []
-    #     for i, s in enumerate(stacks_run):
-    #         in_stack = self.inputs.stacks[i]
-    #
-    #         if s in masks_run:
-    #             out_stack = os.path.join(
-    #                 self._gen_filename("output_dir_stacks"),
-    #                 os.path.basename(in_stack),
-    #             )
-    #             in_mask = self.inputs.masks[masks_run.index(s)]
-    #             in_mask = self.inputs.masks[masks_run.index(s)]
-    #             out_mask = os.path.join(
-    #                 self._gen_filename("output_dir_masks"),
-    #                 os.path.basename(in_mask),
-    #             )
-    #             out_stacks.append(out_stack)
-    #             out_masks.append(out_mask)
-    #         else:
-    #             raise RuntimeError(
-    #                 f"Stack {os.path.basename(self.inputs.stacks[i])} has "
-    #                 f"no corresponding mask (existing IDs: {masks_run})."
-    #             )
-    #
-    #         os.system(f"cp {in_stack} " f"{out_stack}")
-    #         os.system(f"cp {in_mask} " f"{out_mask}")
-    #     self._results["output_stacks"] = out_stacks
-    #     self._results["output_masks"] = out_masks
-    #     return runtime
-
 
     def _run_interface(self, runtime):
+
+        out_stacks = []
+        out_masks = []
 
         # Check that stacks and masks run_ids match
         stacks_run = get_run_id(self.inputs.stacks)
         masks_run = get_run_id(self.inputs.masks)
 
+        if len(stacks_run) and len(masks_run):
 
-        stacks_acq = get_acq_id(self.inputs.stacks)
-        masks_acq = get_acq_id(self.inputs.masks)
+            stacks_acq = get_acq_id(self.inputs.stacks)
+            masks_acq = get_acq_id(self.inputs.masks)
 
-        run_acq_stacks = zip(stacks_run, stacks_acq)
+            if len(stacks_acq) and len(masks_acq):
 
-        out_stacks = []
-        out_masks = []
+                assert len(stacks_acq) == len(masks_acq), \
+                    f"Error with acqs {stacks_acq} and {masks_acq}"
 
-        for i, (r, a)  in enumerate(run_acq_stacks):
+                print("Mix of acq and run are available")
+
+                run_acq_stacks = zip(stacks_run, stacks_acq)
+
+                for i, (r, a)  in enumerate(run_acq_stacks):
 
 
-            if r in masks_run and a in masks_acq:
+                    if r in masks_run and a in masks_acq:
 
-                in_stack = self.inputs.stacks[i]
+                        in_stack = self.inputs.stacks[i]
+
+                        out_stack = os.path.join(
+                            self._gen_filename("output_dir_stacks"),
+                            os.path.basename(in_stack),
+                        )
+
+                        in_mask = self.inputs.masks[i]
+
+                        out_mask = os.path.join(
+                            self._gen_filename("output_dir_masks"),
+                            os.path.basename(in_mask),
+                        )
+
+                        out_stacks.append(out_stack)
+                        out_masks.append(out_mask)
+                    else:
+                        raise RuntimeError(
+                            f"Stack {os.path.basename(self.inputs.stacks[i])} has "
+                            f"no corresponding mask (existing IDs: {masks_run})."
+                        )
+
+                    os.system(f"cp {in_stack} " f"{out_stack}")
+                    os.system(f"cp {in_mask} " f"{out_mask}")
+
+            else:
+
+                print("Only runs (no acq) are available")
+
+                for i, s in enumerate(stacks_run):
+                    in_stack = self.inputs.stacks[i]
+
+                    if s in masks_run:
+                        out_stack = os.path.join(
+                            self._gen_filename("output_dir_stacks"),
+                            os.path.basename(in_stack),
+                        )
+                        in_mask = self.inputs.masks[masks_run.index(s)]
+
+                        out_mask = os.path.join(
+                            self._gen_filename("output_dir_masks"),
+                            os.path.basename(in_mask),
+                        )
+                        out_stacks.append(out_stack)
+                        out_masks.append(out_mask)
+                    else:
+                        raise RuntimeError(
+                            f"Stack {os.path.basename(self.inputs.stacks[i])} has "
+                            f"no corresponding mask (existing IDs: {masks_run})."
+                        )
+
+                    os.system(f"cp {in_stack} " f"{out_stack}")
+                    os.system(f"cp {in_mask} " f"{out_mask}")
+
+        else:
+            print("No runs, no acqs are available, direct copy")
+
+            for i, (in_stack, in_mask) in enumerate(zip(self.inputs.stacks, self.inputs.masks):
 
                 out_stack = os.path.join(
-                    self._gen_filename("output_dir_stacks"),
-                    os.path.basename(in_stack),
-                )
-
-                in_mask = self.inputs.masks[i]
+                        self._gen_filename("output_dir_stacks"),
+                        os.path.basename(in_stack),
+                    )
 
                 out_mask = os.path.join(
                     self._gen_filename("output_dir_masks"),
                     os.path.basename(in_mask),
                 )
-
                 out_stacks.append(out_stack)
                 out_masks.append(out_mask)
-            else:
-                raise RuntimeError(
-                    f"Stack {os.path.basename(self.inputs.stacks[i])} has "
-                    f"no corresponding mask (existing IDs: {masks_run})."
-                )
 
-            os.system(f"cp {in_stack} " f"{out_stack}")
-            os.system(f"cp {in_mask} " f"{out_mask}")
+                os.system(f"cp {in_stack} " f"{out_stack}")
+                os.system(f"cp {in_mask} " f"{out_mask}")
+
         self._results["output_stacks"] = out_stacks
         self._results["output_masks"] = out_masks
+
         return runtime
 
     def _gen_filename(self, name):
