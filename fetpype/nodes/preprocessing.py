@@ -590,7 +590,8 @@ class CheckAndSortStacksAndMasks(BaseInterface):
         else:
             print("No runs, no acqs are available, direct copy")
 
-            for i, (in_stack, in_mask) in enumerate(zip(self.inputs.stacks, self.inputs.masks):
+            for i, (in_stack, in_mask) in enumerate(zip(self.inputs.stacks,
+                                                        self.inputs.masks)):
 
                 out_stack = os.path.join(
                         self._gen_filename("output_dir_stacks"),
