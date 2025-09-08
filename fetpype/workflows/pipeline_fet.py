@@ -31,6 +31,7 @@ def create_main_workflow(
     acquisitions,
     cfg_path,
     nprocs,
+    ngpuprocs,
     save_intermediates=False,
     debug=False,
     verbose=False,
@@ -252,7 +253,14 @@ def create_main_workflow(
 
     main_workflow.run(
         plugin="MultiProc",
-        plugin_args={"n_procs": nprocs, "status_callback": status_line},
+        if ngpuprocs is not None:
+            plugin_args={"n_procs": nprocs,
+                         "n_gpu_procs": ngpuprocs,
+                         "status_callback": status_line},
+        else:
+
+            plugin_args={"n_procs": nprocs,
+                         "status_callback": status_line},
     )
 
 
@@ -284,6 +292,7 @@ def main():
         acquisitions=args.acq,
         cfg_path=args.cfg_path,
         nprocs=args.nprocs,
+        ngpuprocs=args.ngpuprocs,
         save_intermediates=args.save_intermediates,
         debug=args.debug,
         verbose=args.verbose,

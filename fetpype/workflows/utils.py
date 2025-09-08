@@ -83,9 +83,20 @@ def get_default_parser(desc):
             "functions to be used in the pipeline."
         ),
     )
+
     parser.add_argument(
         "--nprocs",
         dest="nprocs",
+        type=int,
+        default=1,
+        help="Number of processes to allocate.",
+        required=False,
+    )
+
+
+    parser.add_argument(
+        "--ngpuprocs",
+        dest="ngpuprocs",
         type=int,
         default=1,
         help="Number of processes to allocate.",
