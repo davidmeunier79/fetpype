@@ -98,8 +98,7 @@ def get_default_parser(desc):
         "--ngpuprocs",
         dest="ngpuprocs",
         type=int,
-        default=1,
-        help="Number of processes to allocate.",
+        help="Number of gpu processes to allocate.",
         required=False,
     )
 
