@@ -32,6 +32,7 @@ VALID_RECON_TAGS = [
     "input_masks_dir",
     "output_dir",
     "output_volume",
+    "output_slices_dir",
     "input_tp",
     "output_res",
     "singularity_path",
