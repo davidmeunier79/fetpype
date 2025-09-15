@@ -32,6 +32,8 @@ def run_recon_cmd(
     is_valid_cmd(cmd, VALID_TAGS)
     output_dir = os.path.join(os.getcwd(), "recon")
     output_volume = os.path.join(output_dir, "recon.nii.gz")
+    output_slices_dir = os.path.join(os.getcwd(), "slices")
+
     in_stacks_dir = get_directory(input_stacks)
     in_stacks = " ".join(input_stacks)
     in_masks_dir = get_directory(input_masks)
@@ -60,7 +62,7 @@ def run_recon_cmd(
         output_volume = os.path.join(output_dir, cfg.path_to_output)
 
     if "<output_slices_dir>" in cmd:
-        cmd = cmd.replace("<output_slices_dir>", output_dir)
+        cmd = cmd.replace("<output_slices_dir>", output_slices_dir)
 
     if "<input_tp>" in cmd:
         try:
