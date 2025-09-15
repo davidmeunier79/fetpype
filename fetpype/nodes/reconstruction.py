@@ -46,8 +46,10 @@ def run_recon_cmd(
     cmd = cmd.replace("<input_dir>", in_stacks_dir)
     cmd = cmd.replace("<input_masks>", in_masks)
     cmd = cmd.replace("<input_masks_dir>", in_masks_dir)
+
     if "<output_volume>" in cmd:
         cmd = cmd.replace("<output_volume>", output_volume)
+
     if "<output_dir>" in cmd:
         cmd = cmd.replace("<output_dir>", output_dir)
         # Assert that args.path_to_output is defined
@@ -56,6 +58,10 @@ def run_recon_cmd(
             "but path_to_output is not defined."
         )
         output_volume = os.path.join(output_dir, cfg.path_to_output)
+
+    if "<output_slices_dir>" in cmd:
+        cmd = cmd.replace("<output_slices_dir>", output_dir)
+
     if "<input_tp>" in cmd:
         try:
             input_tp = np.round(
@@ -80,6 +86,7 @@ def run_recon_cmd(
         # we are using singularity and the
         # parameter has been set in the config file
         cmd = cmd.replace("<singularity_path>", singularity_path)
+
     if "<singularity_mount>" in cmd:
         # assume that if we have a singularity mount path,
         # we are using singularity and the
