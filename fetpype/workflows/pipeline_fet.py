@@ -260,6 +260,8 @@ def create_main_workflow(
         plugin_args={"n_procs": nprocs,
                     "status_callback": status_line}
 
+    main_workflow.config['execution'] = {'remove_unnecessary_outputs': False}
+
     main_workflow.run(
         plugin="MultiProc",
         plugin_args=plugin_args
