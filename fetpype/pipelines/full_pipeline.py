@@ -466,9 +466,9 @@ def create_full_pipeline(cfg, load_masks=False, name="full_pipeline"):
     recon = get_recon(cfg)
     segmentation = get_seg(cfg)
 
-    print(cfg.surface)
+    print(cfg)
 
-    if cfg.surface:
+    if "surface" in cfg.keys:
         surface = get_surf(cfg)
 
     # PREPROCESSING
