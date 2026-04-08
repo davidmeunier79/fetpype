@@ -466,7 +466,10 @@ def create_full_pipeline(cfg, load_masks=False, name="full_pipeline"):
     recon = get_recon(cfg)
     segmentation = get_seg(cfg)
 
-    surface = get_surf(cfg)
+    print(cfg.surface)
+
+    if cfg.surface:
+        surface = get_surf(cfg)
 
     # PREPROCESSING
     full_fet_pipe.connect(inputnode, "stacks", prepro_pipe, "inputnode.stacks")
@@ -493,18 +496,21 @@ def create_full_pipeline(cfg, load_masks=False, name="full_pipeline"):
         segmentation, "outputnode.seg_volume", outputnode, "output_seg"
     )
 
-    # SURFACE EXTRACTION
-    full_fet_pipe.connect(
-        segmentation, "outputnode.seg_volume", surface, "inputnode.seg_volume"
-    )
 
-    full_fet_pipe.connect(
-        surface, "outputnode.surf_volume_lh", outputnode, "output_surf_lh"
-    )
+    if cfg.surface:
 
-    full_fet_pipe.connect(
-        surface, "outputnode.surf_volume_rh", outputnode, "output_surf_rh"
-    )
+        # SURFACE EXTRACTION
+        full_fet_pipe.connect(
+            segmentation, "outputnode.seg_volume", surface, "inputnode.seg_volume"
+        )
+
+        full_fet_pipe.connect(
+            surface, "outputnode.surf_volume_lh", outputnode, "output_surf_lh"
+        )
+
+        full_fet_pipe.connect(
+            surface, "outputnode.surf_volume_rh", outputnode, "output_surf_rh"
+        )
 
     return full_fet_pipe
 
