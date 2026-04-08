@@ -468,7 +468,7 @@ def create_full_pipeline(cfg, load_masks=False, name="full_pipeline"):
 
     print(cfg)
 
-    if "surface" in cfg.keys:
+    if "surface" in cfg.keys():
         surface = get_surf(cfg)
 
     # PREPROCESSING
@@ -496,9 +496,7 @@ def create_full_pipeline(cfg, load_masks=False, name="full_pipeline"):
         segmentation, "outputnode.seg_volume", outputnode, "output_seg"
     )
 
-
-    if cfg.surface:
-
+    if "surface" in cfg.keys():
         # SURFACE EXTRACTION
         full_fet_pipe.connect(
             segmentation, "outputnode.seg_volume", surface, "inputnode.seg_volume"
