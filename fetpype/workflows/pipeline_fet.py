@@ -310,5 +310,6 @@ def main():
 if __name__ == "__main__":
     import time
     start_time = time.time()
+    print("--- Start Time: ", start_time, " ---")
     main()
     print("--- %s seconds ---" % (time.time() - start_time))
