@@ -49,7 +49,7 @@ def create_main_workflow(
             Path to the nipype directory.
         subjects (list[str], optional):
             List of subject IDs matching the BIDS specification
-            (e.g., sub-[SUB1], sub-[SUB2], ...).
+            (e.g., init_and_load_cfgsub-[SUB1], sub-[SUB2], ...).
         sessions (list[str], optional):
             List of session IDs matching the BIDS specification
             (e.g., ses-[SES1], ses-[SES2], ...).
@@ -209,15 +209,18 @@ def create_main_workflow(
         seg_label=cfg.segmentation.pipeline,
     )
 
-    surf_datasink = create_bids_datasink(
-        out_dir=out_dir,
-        pipeline_name=pipeline_name,
-        strip_dir=main_workflow.base_dir,
-        name="final_surf_datasink",
-        rec_label=cfg.reconstruction.pipeline,
-        seg_label=cfg.segmentation.pipeline,
-        surf_label=cfg.surface.pipeline,
-    )
+
+    if "surface" in cfg.keys():
+
+        surf_datasink = create_bids_datasink(
+            out_dir=out_dir,
+            pipeline_name=pipeline_name,
+            strip_dir=main_workflow.base_dir,
+            name="final_surf_datasink",
+            rec_label=cfg.reconstruction.pipeline,
+            seg_label=cfg.segmentation.pipeline,
+            surf_label=cfg.surface.pipeline,
+        )
 
     # Connect the pipeline to the datasink
     main_workflow.connect(
