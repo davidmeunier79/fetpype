@@ -303,6 +303,8 @@ def main():
         verbose=args.verbose,
     )
 
-
 if __name__ == "__main__":
+    import time
+    start_time = time.time()
     main()
+    print("--- %s seconds ---" % (time.time() - start_time))
