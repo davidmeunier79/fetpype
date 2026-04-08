@@ -233,19 +233,20 @@ def create_main_workflow(
         f"@{cfg.segmentation.pipeline}",
     )
 
-    main_workflow.connect(
-        fet_pipe,
-        "outputnode.output_surf_lh",
-        surf_datasink,
-        "@surf_lh",
-    )
+    if "surface" in cfg.keys():
+        main_workflow.connect(
+            fet_pipe,
+            "outputnode.output_surf_lh",
+            surf_datasink,
+            "@surf_lh",
+        )
 
-    main_workflow.connect(
-        fet_pipe,
-        "outputnode.output_surf_rh",
-        surf_datasink,
-        "@surf_rh",
-    )
+        main_workflow.connect(
+            fet_pipe,
+            "outputnode.output_surf_rh",
+            surf_datasink,
+            "@surf_rh",
+        )
 
     if cfg.save_graph:
         main_workflow.write_graph(
