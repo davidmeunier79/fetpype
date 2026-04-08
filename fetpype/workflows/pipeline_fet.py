@@ -1,4 +1,7 @@
 import os
+
+import time
+
 import nipype.pipeline.engine as pe
 from fetpype.pipelines.full_pipeline import (
     create_full_pipeline,
@@ -291,6 +294,9 @@ def main():
 
     # main_workflow
     print("Initialising the pipeline...")
+    start_time = time.time()
+    print("--- Start Time: ", start_time, " ---")
+
     create_main_workflow(
         data_dir=args.data,
         masks_dir=args.masks,
@@ -307,9 +313,9 @@ def main():
         verbose=args.verbose,
     )
 
-if __name__ == "__main__":
-    import time
-    start_time = time.time()
-    print("--- Start Time: ", start_time, " ---")
-    main()
     print("--- %s seconds ---" % (time.time() - start_time))
+
+
+
+if __name__ == "__main__":
+    main()
